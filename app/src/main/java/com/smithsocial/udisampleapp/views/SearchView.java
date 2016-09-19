@@ -5,5 +5,6 @@ public class SearchView {
         void showProgress();
         void hideProgress();
         void setDevice();
+        void noDevice();
     }
 }
