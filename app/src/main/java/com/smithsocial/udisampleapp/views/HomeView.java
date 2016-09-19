@@ -8,5 +8,7 @@ public class HomeView {
         void hideProgress();
         void setList(List<String> items);
         void noDevices();
+        void goToSearch();
+        void goToDetails(String deviceId);
     }
 }

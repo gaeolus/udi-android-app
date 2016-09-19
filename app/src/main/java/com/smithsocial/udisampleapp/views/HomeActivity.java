@@ -1,8 +1,8 @@
 package com.smithsocial.udisampleapp.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.smithsocial.udisampleapp.R;
+import com.smithsocial.udisampleapp.presenters.HomePresenter;
+import com.smithsocial.udisampleapp.presenters.HomePresenterImpl;
 
 import java.util.List;
 
@@ -21,6 +23,8 @@ public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI
     private ListView listView;
     private ProgressBar progressBar;
     private TextView noDevicesTextView;
+    private FloatingActionButton fab;
+    private HomePresenter homePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +36,22 @@ public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI
         listView = (ListView) findViewById(R.id.device_list);
         progressBar = (ProgressBar) findViewById(R.id.home_progress_bar);
         noDevicesTextView = (TextView) findViewById(R.id.home_no_devices_text_view);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        homePresenter = new HomePresenterImpl(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        homePresenter.onResume();
+        homePresenter.reactToFab(fab);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        homePresenter.onDestroy();
     }
 
     @Override
@@ -81,11 +92,24 @@ public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI
     public void setList(List<String> items) {
         listView.setVisibility(View.VISIBLE);
         // placeholder listview textview layout
-        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_layout));
+        listView.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_layout, items));
+        homePresenter.reactToList(listView);
     }
 
     @Override
     public void noDevices(){
         noDevicesTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void goToSearch() {
+        startActivity(new Intent(this, SearchActivity.class));
+    }
+
+    @Override
+    public void goToDetails(String deviceId) {
+        Intent intent = new Intent(this, DeviceDetailsActivity.class);
+        intent.putExtra("device_id", deviceId);
+        startActivity(intent);
     }
 }
