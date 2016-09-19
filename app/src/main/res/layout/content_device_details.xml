@@ -12,4 +12,11 @@
     tools:context="com.smithsocial.udisampleapp.views.DeviceDetailsActivity"
     tools:showIn="@layout/activity_device_details">
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/details_progress_bar"/>
+
 </RelativeLayout>
