@@ -15,7 +15,7 @@ public class SearchPresenterImpl extends SearchPresenter {
     @Override
     public void onResume() {
         if (searchActivity != null){
-            // get the device ID from search Activity
+            searchActivity.showProgress();
         }
     }
 
