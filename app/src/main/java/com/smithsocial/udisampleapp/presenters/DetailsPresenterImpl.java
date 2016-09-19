@@ -15,7 +15,7 @@ public class DetailsPresenterImpl extends DetailsPresenter {
     @Override
     public void onResume() {
         if (deviceDetailsActivity != null){
-            // get the device ID from DeviceDetailsActivity
+            deviceDetailsActivity.showProgress();
         }
     }
 

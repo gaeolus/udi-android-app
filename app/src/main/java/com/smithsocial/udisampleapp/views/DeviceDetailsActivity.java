@@ -9,9 +9,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.smithsocial.udisampleapp.R;
+import com.smithsocial.udisampleapp.presenters.DetailsPresenter;
+import com.smithsocial.udisampleapp.presenters.DetailsPresenterImpl;
 
 public class DeviceDetailsActivity extends AppCompatActivity implements DetailsView.UpdateUI {
     private ProgressBar progressBar;
+    private DetailsPresenter detailsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +24,20 @@ public class DeviceDetailsActivity extends AppCompatActivity implements DetailsV
         setSupportActionBar(toolbar);
 
         progressBar = (ProgressBar) findViewById(R.id.details_progress_bar);
+        detailsPresenter = new DetailsPresenterImpl(this);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        detailsPresenter.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        detailsPresenter.onDestroy();
     }
 
     @Override
