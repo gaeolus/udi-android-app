@@ -8,10 +8,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.smithsocial.udisampleapp.R;
 
-public class HomeActivity extends AppCompatActivity {
+import java.util.List;
+
+public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI {
+    private ListView listView;
+    private ProgressBar progressBar;
+    private TextView noDevicesTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +28,10 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        listView = (ListView) findViewById(R.id.device_list);
+        progressBar = (ProgressBar) findViewById(R.id.home_progress_bar);
+        noDevicesTextView = (TextView) findViewById(R.id.home_no_devices_text_view);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -50,5 +63,29 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void showProgress() {
+        listView.setVisibility(View.INVISIBLE);
+        noDevicesTextView.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setList(List<String> items) {
+        listView.setVisibility(View.VISIBLE);
+        // placeholder listview textview layout
+        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_layout));
+    }
+
+    @Override
+    public void noDevices(){
+        noDevicesTextView.setVisibility(View.VISIBLE);
     }
 }
