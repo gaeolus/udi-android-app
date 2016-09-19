@@ -6,10 +6,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.smithsocial.udisampleapp.R;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements SearchView.UpdateUI {
+    private ProgressBar progressBar;
+    private TextView noDeviceFound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,15 +21,29 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        progressBar = (ProgressBar) findViewById(R.id.search_view_progress_bar);
+        noDeviceFound = (TextView) findViewById(R.id.search_no_device_text_view);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
+    @Override
+    public void showProgress() {
+        noDeviceFound.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setDevice() {
+        // set the device here
+    }
+
+    @Override
+    public void noDevice() {
+        noDeviceFound.setVisibility(View.VISIBLE);
+    }
 }
