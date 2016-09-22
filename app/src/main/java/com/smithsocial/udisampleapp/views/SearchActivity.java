@@ -2,6 +2,7 @@ package com.smithsocial.udisampleapp.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -25,6 +26,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) ab.setDisplayHomeAsUpEnabled(true);
         progressBar = (ProgressBar) findViewById(R.id.search_view_progress_bar);
         noDeviceFound = (TextView) findViewById(R.id.search_no_device_text_view);
         editText = (EditText) findViewById(R.id.search_view_edit_text);
