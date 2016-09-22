@@ -26,7 +26,12 @@
         <activity
             android:name=".views.DeviceDetailsActivity"
             android:label="@string/title_activity_device_details"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <provider
+            android:authorities="com.smithsocial.sampleudiapp"
+            android:name=".models.provider.DeviceProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>
