@@ -1,7 +1,7 @@
 package com.smithsocial.udisampleapp.views;
 
-public class DetailsView {
-    public interface UpdateUI{
+class DetailsView {
+    interface UpdateUI{
         void showProgress();
         void hideProgress();
         void showDeviceDetails();
