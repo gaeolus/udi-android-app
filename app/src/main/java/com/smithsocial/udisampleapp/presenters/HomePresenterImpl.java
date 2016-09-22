@@ -95,20 +95,21 @@ public class HomePresenterImpl extends HomePresenter {
 
     @Override
     public void reactToList(final ListView listView) {
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+        Observable<HashMap.Entry> observable = Observable.create(new Observable.OnSubscribe<HashMap.Entry>() {
             @Override
-            public void call(final Subscriber<? super String> subscriber) {
+            public void call(final Subscriber<? super HashMap.Entry> subscriber) {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         if (subscriber.isUnsubscribed()) return;
-                        subscriber.onNext( (String) listView.getAdapter().getItem(i));
+                        HashMap.Entry mapEntry = (HashMap.Entry) listView.getAdapter().getItem(i);
+                        subscriber.onNext( mapEntry );
                     }
                 });
             }
         });
 
-        Observer<String> observer = new Observer<String>() {
+        Observer<HashMap.Entry> observer = new Observer<HashMap.Entry>() {
             @Override
             public void onCompleted() {
                 // completed
@@ -120,8 +121,8 @@ public class HomePresenterImpl extends HomePresenter {
             }
 
             @Override
-            public void onNext(String DeviceId) {
-                homeActivity.goToDetails(DeviceId);
+            public void onNext(HashMap.Entry device) {
+                homeActivity.goToDetails((String) device.getKey(), (String) device.getValue());
             }
         };
 

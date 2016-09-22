@@ -9,6 +9,6 @@ class HomeView {
         void setList(HashMap<String, String> items);
         void noDevices();
         void goToSearch();
-        void goToDetails(String deviceId);
+        void goToDetails(String deviceId, String deviceName);
     }
 }
