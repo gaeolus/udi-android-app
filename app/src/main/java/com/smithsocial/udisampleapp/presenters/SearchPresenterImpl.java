@@ -2,8 +2,7 @@ package com.smithsocial.udisampleapp.presenters;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
+import android.util.Pair;
 import android.widget.EditText;
 
 import com.smithsocial.udisampleapp.models.LoadDeviceFromApi;
@@ -52,7 +51,6 @@ public class SearchPresenterImpl extends SearchPresenter {
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                         searchActivity.showProgress();
-                        Log.d("lol", charSequence.toString());
                         subscriber.onNext( charSequence.toString() );
                     }
 
@@ -112,7 +110,7 @@ public class SearchPresenterImpl extends SearchPresenter {
             @Override
             public void onNext(String s) {
                 searchActivity.hideProgress();
-                searchActivity.setDevice();
+                searchActivity.setDevice(s, "s");
             }
         };
 
@@ -122,7 +120,33 @@ public class SearchPresenterImpl extends SearchPresenter {
     }
 
     @Override
-    public void reactToDeviceClick(View view) {
-        // react to clicking on the device that's returned by the search
+    public void reactToDeviceClick(final Pair<String, String> stringPair) {
+        Observable<Pair<String, String>> observable = Observable.create(new Observable.OnSubscribe<Pair<String, String>>() {
+            @Override
+            public void call(final Subscriber<? super Pair<String, String>> subscriber) {
+
+                subscriber.onNext(stringPair);
+
+            }
+        });
+
+        Observer<Pair<String, String>> observer = new Observer<Pair<String, String>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Pair<String, String> stringStringPair) {
+                searchActivity.goToDetails(stringStringPair.first, stringStringPair.second);
+            }
+        };
+
+        observable.subscribe(observer);
     }
 }
