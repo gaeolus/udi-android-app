@@ -36,8 +36,8 @@ public class DeviceDetailsActivity extends AppCompatActivity implements DetailsV
         deviceSavedCheckBox = (CheckBox) findViewById(R.id.details_save_check_box);
 
         String deviceId = getIntent().getExtras().getString("device_id");
-        //placeholder device name
-        detailsPresenter = new DetailsPresenterImpl(this, "device name", deviceId);
+        String deviceName = getIntent().getExtras().getString("device_name");
+        detailsPresenter = new DetailsPresenterImpl(this, deviceName, deviceId);
 
     }
 

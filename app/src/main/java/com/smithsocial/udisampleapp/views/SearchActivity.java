@@ -70,6 +70,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
     public void goToDetails(String deviceId) {
         Intent intent = new Intent(this, DeviceDetailsActivity.class);
         intent.putExtra("device_id", deviceId);
+        intent.putExtra("device_name", "placeholder"); // TODO get rid of placeholder
         startActivity(intent);
     }
 }

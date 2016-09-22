@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.smithsocial.udisampleapp.models.LoadDeviceFromApi;
@@ -14,8 +13,6 @@ import com.smithsocial.udisampleapp.models.LocalDevices;
 import com.smithsocial.udisampleapp.models.LocalDevicesImpl;
 import com.smithsocial.udisampleapp.models.provider.DeviceContract;
 import com.smithsocial.udisampleapp.views.DeviceDetailsActivity;
-
-import java.util.HashMap;
 
 import rx.Observable;
 import rx.Observer;
@@ -118,7 +115,7 @@ public class DetailsPresenterImpl extends DetailsPresenter {
             @Override
             public void onNext(String s) {
                 deviceDetailsActivity.hideProgress();
-                deviceDetailsActivity.setDeviceName(s);
+                deviceDetailsActivity.setDeviceName(deviceName);
                 deviceDetailsActivity.setDeviceId(deviceId);
                 //set the rest of the stuff here
             }
