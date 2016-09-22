@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.smithsocial.udisampleapp.presenters.SearchPresenterImpl;
 public class SearchActivity extends AppCompatActivity implements SearchView.UpdateUI {
     private ProgressBar progressBar;
     private TextView noDeviceFound;
+    private EditText editText;
     private SearchPresenter searchPresenter;
 
     @Override
@@ -25,6 +27,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
         setSupportActionBar(toolbar);
         progressBar = (ProgressBar) findViewById(R.id.search_view_progress_bar);
         noDeviceFound = (TextView) findViewById(R.id.search_no_device_text_view);
+        editText = (EditText) findViewById(R.id.search_view_edit_text);
         searchPresenter = new SearchPresenterImpl(this);
 
     }
@@ -33,6 +36,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
     protected void onResume() {
         super.onResume();
         searchPresenter.onResume();
+        searchPresenter.reactToSearch(editText);
     }
 
     @Override
