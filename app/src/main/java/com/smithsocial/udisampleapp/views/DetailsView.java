@@ -4,6 +4,10 @@ class DetailsView {
     interface UpdateUI{
         void showProgress();
         void hideProgress();
-        void showDeviceDetails();
+        void setDeviceName(String name);
+        void setDeviceId(String deviceId);
+        void setDeviceExpirationBool(Boolean hasExpiration);
+        void setSterilizePriorToUse(Boolean hasSterilize);
+        void setDeviceIsSaved(Boolean deviceIsSaved);
     }
 }

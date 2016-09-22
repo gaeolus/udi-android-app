@@ -6,4 +6,6 @@
     <string name="no_devices_saved">No devices saved. Search for a device!</string>
     <string name="no_device_found">No device found</string>
     <string name="search_for_device">Search for a device</string>
+    <string name="sterilize_prior_to_use">Sterilize prior to use</string>
+    <string name="has_expiration">Has expiration</string>
 </resources>
