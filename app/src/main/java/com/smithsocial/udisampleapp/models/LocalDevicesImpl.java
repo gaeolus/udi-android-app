@@ -35,6 +35,23 @@ public class LocalDevicesImpl extends LocalDevices {
     }
 
     @Override
+    public boolean hasSpecificDevice(String deviceId) {
+        Cursor cursor = contentResolver
+                .query(DeviceContract.BASE_CONTENT_URI,
+                        null,
+                        DeviceContract.DeviceEntry.DEVICE_ID + " = '" + deviceId + "'",
+                        null,
+                        null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()){
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
+    }
+
+    @Override
     public void saveDevice(String brandName, String deviceId){
         ContentValues contentValues = new ContentValues();
         contentValues.put(DeviceContract.DeviceEntry.DEVICE_ID, deviceId);
