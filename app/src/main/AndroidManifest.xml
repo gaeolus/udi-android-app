@@ -26,6 +26,7 @@
         <activity
             android:name=".views.DeviceDetailsActivity"
             android:label="@string/title_activity_device_details"
+            android:parentActivityName=".views.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <provider
