@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.smithsocial.udisampleapp.R;
@@ -20,6 +21,7 @@ import com.smithsocial.udisampleapp.presenters.HomePresenterImpl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI {
     private ListView listView;
@@ -94,11 +96,7 @@ public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI
     public void setList(HashMap<String, String> items) {
         listView.setVisibility(View.VISIBLE);
         // placeholder listview textview layout
-        List<String> list = new ArrayList<>();
-        for (String s: items.values()) {
-            list.add(s);
-        }
-        listView.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_layout, list));
+        listView.setAdapter(new HashMapAdapter(this, R.layout.simple_list_item_layout, R.id.list_view_device_id, new ArrayList<>(items.entrySet())));
         homePresenter.reactToList(listView);
     }
 
@@ -113,9 +111,10 @@ public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI
     }
 
     @Override
-    public void goToDetails(String deviceId) {
+    public void goToDetails(String deviceId, String deviceName) {
         Intent intent = new Intent(this, DeviceDetailsActivity.class);
         intent.putExtra("device_id", deviceId);
+        intent.putExtra("device_name", deviceName);
         startActivity(intent);
     }
 }
