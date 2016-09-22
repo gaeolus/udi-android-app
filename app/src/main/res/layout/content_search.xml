@@ -12,6 +12,12 @@
     tools:context=".views.SearchActivity"
     tools:showIn="@layout/activity_search">
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_view_edit_text"
+        android:hint="@string/search_for_device"/>
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
