@@ -33,8 +33,9 @@ public class HomePresenterImpl extends HomePresenter {
     @Override
     public void onResume() {
         if (homeActivity != null){
-            reactToDatabase();
+            homeActivity.showProgress();
         }
+        reactToDatabase();
     }
 
     private void reactToDatabase(){
