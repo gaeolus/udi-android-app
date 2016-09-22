@@ -17,6 +17,8 @@ import com.smithsocial.udisampleapp.R;
 import com.smithsocial.udisampleapp.presenters.HomePresenter;
 import com.smithsocial.udisampleapp.presenters.HomePresenterImpl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI {
@@ -89,10 +91,14 @@ public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI
     }
 
     @Override
-    public void setList(List<String> items) {
+    public void setList(HashMap<String, String> items) {
         listView.setVisibility(View.VISIBLE);
         // placeholder listview textview layout
-        listView.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_layout, items));
+        List<String> list = new ArrayList<>();
+        for (String s: items.values()) {
+            list.add(s);
+        }
+        listView.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_layout, list));
         homePresenter.reactToList(listView);
     }
 
