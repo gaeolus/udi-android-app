@@ -2,8 +2,8 @@ package com.smithsocial.udisampleapp.views;
 
 import java.util.HashMap;
 
-public class HomeView {
-    public interface UpdateUI{
+class HomeView {
+    interface UpdateUI{
         void showProgress();
         void hideProgress();
         void setList(HashMap<String, String> items);
