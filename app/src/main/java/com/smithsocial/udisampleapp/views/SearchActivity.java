@@ -67,10 +67,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
     }
 
     @Override
-    public void goToDetails(String deviceId) {
+    public void goToDetails(String deviceId, String deviceName) {
         Intent intent = new Intent(this, DeviceDetailsActivity.class);
         intent.putExtra("device_id", deviceId);
-        intent.putExtra("device_name", "placeholder"); // TODO get rid of placeholder
+        intent.putExtra("device_name", deviceName);
         startActivity(intent);
     }
 }

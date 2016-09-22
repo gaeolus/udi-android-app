@@ -6,6 +6,6 @@ class SearchView {
         void hideProgress();
         void setDevice();
         void noDevice();
-        void goToDetails(String deviceId);
+        void goToDetails(String deviceId, String deviceName);
     }
 }
