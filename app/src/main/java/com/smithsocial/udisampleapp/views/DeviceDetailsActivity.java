@@ -19,6 +19,7 @@ public class DeviceDetailsActivity extends AppCompatActivity implements DetailsV
     private TextView deviceIdTextView;
     private TextView sterilizationBoolTextView;
     private TextView expirationBoolTextView;
+    private TextView deviceDescriptionView;
     private CheckBox deviceSavedCheckBox;
     private DetailsPresenter detailsPresenter;
 
@@ -38,6 +39,7 @@ public class DeviceDetailsActivity extends AppCompatActivity implements DetailsV
         sterilizationBoolTextView = (TextView) findViewById(R.id.device_sterile_prior_bool);
         expirationBoolTextView = (TextView) findViewById(R.id.details_expiration_bool);
         deviceSavedCheckBox = (CheckBox) findViewById(R.id.details_save_check_box);
+        deviceDescriptionView = (TextView) findViewById(R.id.details_device_description_text);
 
         String deviceId = getIntent().getExtras().getString("device_id");
         String deviceName = getIntent().getExtras().getString("device_name");
@@ -86,6 +88,11 @@ public class DeviceDetailsActivity extends AppCompatActivity implements DetailsV
     @Override
     public void setSterilizePriorToUse(Boolean hasSterilize) {
         sterilizationBoolTextView.setText(hasSterilize.toString());
+    }
+
+    @Override
+    public void setDeviceDescription(String deviceDescription){
+        deviceDescriptionView.setText(deviceDescription);
     }
 
     @Override
