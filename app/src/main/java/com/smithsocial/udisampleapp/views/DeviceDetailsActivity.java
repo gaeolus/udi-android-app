@@ -39,6 +39,7 @@ public class DeviceDetailsActivity extends AppCompatActivity implements DetailsV
         sterilizationBoolTextView = (TextView) findViewById(R.id.device_sterile_prior_bool);
         expirationBoolTextView = (TextView) findViewById(R.id.details_expiration_bool);
         deviceSavedCheckBox = (CheckBox) findViewById(R.id.details_save_check_box);
+        deviceDescriptionView = (TextView) findViewById(R.id.details_device_description_text);
 
         String deviceId = getIntent().getExtras().getString("device_id");
         String deviceName = getIntent().getExtras().getString("device_name");
