@@ -14,6 +14,7 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import udiwrapper.Device.Device;
 
 public class SearchPresenterImpl extends SearchPresenter {
     private SearchActivity searchActivity;
@@ -74,8 +75,38 @@ public class SearchPresenterImpl extends SearchPresenter {
 
             @Override
             public void onNext(String s) {
-                if (loadDeviceFromApi.DeviceExists(s)){
-                    reactToFetch(s);
+                reactToDeviceExists(s);
+            }
+        };
+
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    private void reactToDeviceExists(final String deviceId){
+        Observable<Boolean> observable = Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                subscriber.onNext( loadDeviceFromApi.DeviceExists(deviceId) );
+            }
+        });
+
+        Observer<Boolean> observer = new Observer<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                if ( aBoolean ) {
+                    reactToFetch(deviceId);
                 } else {
                     searchActivity.hideProgress();
                     searchActivity.noDevice();
@@ -90,13 +121,13 @@ public class SearchPresenterImpl extends SearchPresenter {
 
     private void reactToFetch(final String s){
         // once the wrapper is in place, this will be changed accordingly
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+        Observable<Device> observable = Observable.create(new Observable.OnSubscribe<Device>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
-                subscriber.onNext( "Placeholder String" );
+            public void call(Subscriber<? super Device> subscriber) {
+                subscriber.onNext( loadDeviceFromApi.getDevice(s) );
             }
         });
-        Observer<String> observer = new Observer<String>() {
+        Observer<Device> observer = new Observer<Device>() {
             @Override
             public void onCompleted() {
 
@@ -108,9 +139,9 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
 
             @Override
-            public void onNext(String s) {
+            public void onNext(Device device) {
                 searchActivity.hideProgress();
-                searchActivity.setDevice(s, "s");
+                searchActivity.setDevice( s, device.getBrandName() );
             }
         };
 

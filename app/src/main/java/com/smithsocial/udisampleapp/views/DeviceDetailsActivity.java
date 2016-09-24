@@ -35,7 +35,7 @@ public class DeviceDetailsActivity extends AppCompatActivity implements DetailsV
         progressBar = (ProgressBar) findViewById(R.id.details_progress_bar);
         brandNameTextView = (TextView) findViewById(R.id.details_brand_name);
         deviceIdTextView = (TextView) findViewById(R.id.details_device_id);
-        sterilizationBoolTextView = (TextView) findViewById(R.id.details_sterilize_prior);
+        sterilizationBoolTextView = (TextView) findViewById(R.id.device_sterile_prior_bool);
         expirationBoolTextView = (TextView) findViewById(R.id.details_expiration_bool);
         deviceSavedCheckBox = (CheckBox) findViewById(R.id.details_save_check_box);
 

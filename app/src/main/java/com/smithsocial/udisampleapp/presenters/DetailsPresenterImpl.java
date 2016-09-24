@@ -19,6 +19,7 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import udiwrapper.Device.Device;
 
 public class DetailsPresenterImpl extends DetailsPresenter {
     private String deviceId;
@@ -94,14 +95,14 @@ public class DetailsPresenterImpl extends DetailsPresenter {
 
     private void reactToDeviceFetch(){
         // once the wrapper is in place, this will be changed accordingly
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+        Observable<Device> observable = Observable.create(new Observable.OnSubscribe<Device>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
+            public void call(Subscriber<? super Device> subscriber) {
                 deviceDetailsActivity.showProgress();
-                subscriber.onNext( "Placeholder String" ); //loadDeviceFromApi.getDevice(deviceId);
+                subscriber.onNext( loadDeviceFromApi.getDevice(deviceId) ); //loadDeviceFromApi.getDevice(deviceId);
             }
         });
-        Observer<String> observer = new Observer<String>() {
+        Observer<Device> observer = new Observer<Device>() {
             @Override
             public void onCompleted() {
 
@@ -113,10 +114,12 @@ public class DetailsPresenterImpl extends DetailsPresenter {
             }
 
             @Override
-            public void onNext(String s) {
+            public void onNext(Device device) {
                 deviceDetailsActivity.hideProgress();
-                deviceDetailsActivity.setDeviceName(deviceName);
+                deviceDetailsActivity.setDeviceName(device.getBrandName());
                 deviceDetailsActivity.setDeviceId(deviceId);
+                deviceDetailsActivity.setDeviceExpirationBool(device.hasExpirationDate());
+                deviceDetailsActivity.setSterilizePriorToUse(device.getSterilization().isSterilizePriorToUse());
                 //set the rest of the stuff here
             }
         };
