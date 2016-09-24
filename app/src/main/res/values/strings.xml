@@ -8,4 +8,5 @@
     <string name="search_for_device">Search for a device</string>
     <string name="sterilize_prior_to_use">Sterilize prior to use</string>
     <string name="has_expiration">Has expiration</string>
+    <string name="description">Description</string>
 </resources>
