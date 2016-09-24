@@ -38,6 +38,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/search_view_edit_text"
         android:id="@+id/search_device_card_view"
+		android:paddingTop="@dimens/search_card_padding_vertical"
+		android:paddingBottom="@dimens/search_card_padding_vertical"
+		android:paddingLeft="@dimens/search_card_padding_horizontal"
+		android:paddingRight="@dimens/search_card_padding_horizontal"
         android:layout_centerHorizontal="true">
 
         <TextView
