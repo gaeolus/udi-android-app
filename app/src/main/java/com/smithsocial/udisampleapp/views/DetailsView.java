@@ -8,6 +8,7 @@ class DetailsView {
         void setDeviceId(String deviceId);
         void setDeviceExpirationBool(Boolean hasExpiration);
         void setSterilizePriorToUse(Boolean hasSterilize);
+        void setDeviceDescription(String deviceDescription);
         void setDeviceIsSaved(Boolean deviceIsSaved);
     }
 }

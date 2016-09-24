@@ -19,6 +19,7 @@ public class DeviceDetailsActivity extends AppCompatActivity implements DetailsV
     private TextView deviceIdTextView;
     private TextView sterilizationBoolTextView;
     private TextView expirationBoolTextView;
+    private TextView deviceDescriptionView;
     private CheckBox deviceSavedCheckBox;
     private DetailsPresenter detailsPresenter;
 
@@ -86,6 +87,11 @@ public class DeviceDetailsActivity extends AppCompatActivity implements DetailsV
     @Override
     public void setSterilizePriorToUse(Boolean hasSterilize) {
         sterilizationBoolTextView.setText(hasSterilize.toString());
+    }
+
+    @Override
+    public void setDeviceDescription(String deviceDescription){
+        deviceDescriptionView.setText(deviceDescription);
     }
 
     @Override
