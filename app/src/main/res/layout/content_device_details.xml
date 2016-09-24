@@ -32,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/details_brand_name"
+        android:textSize="24sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/details_device_id" />
@@ -41,6 +42,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/details_expiration_bool"
         android:layout_below="@+id/details_expiration_label"
+        android:textSize="24sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -48,6 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/details_sterilize_prior"
+        android:textSize="24sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/device_sterile_prior_bool" />
@@ -56,6 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/details_device_description_text"
+        android:textSize="24sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/details_device_description"/>
@@ -75,7 +79,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/details_device_description"
         android:text="@string/description"
-        android:textSize="24sp"
         android:layout_below="@+id/details_device_id"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -85,7 +88,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/details_sterilize_prior"
-        android:textSize="24sp"
         android:layout_below="@+id/details_expiration_bool"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -95,7 +97,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/details_expiration_label"
-        android:textSize="24sp"
         android:layout_below="@+id/details_device_description_text"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
