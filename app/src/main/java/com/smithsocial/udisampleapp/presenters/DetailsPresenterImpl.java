@@ -3,7 +3,6 @@ package com.smithsocial.udisampleapp.presenters;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 
@@ -78,11 +77,6 @@ public class DetailsPresenterImpl extends DetailsPresenter {
             @Override
             public void onNext(Boolean b) {
                 deviceDetailsActivity.setDeviceIsSaved(b);
-                if (b) {
-                    Log.d("device", "is saved");
-                } else {
-                    Log.d("device", "is NOT saved");
-                }
             }
         };
         observable.subscribeOn(Schedulers.newThread())
