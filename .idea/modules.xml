@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/UDISampleApp.iml" filepath="$PROJECT_DIR$/UDISampleApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/udi-android-app.iml" filepath="$PROJECT_DIR$/udi-android-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
