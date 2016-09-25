@@ -2,9 +2,9 @@
 This is a simple sample android application to show how to use the [udiwrapper](https://github.com/bensmith41/udiwrapper) library. It is only meant to show a small amount of what is possible with the wrapper.
 
 # Building
-1) Clone this repo:
-2) Open Android Studio, and open the project
-3) Run the app
+- Clone this repo:
+- Open Android Studio, and open the project
+- Run the app
 
 # What it can do
 - Search for a device given a Device Identifier (Unique Devices aren't supported by this app)
