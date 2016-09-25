@@ -38,11 +38,8 @@ public class DetailsPresenterImpl extends DetailsPresenter {
 
     @Override
     public void onResume() {
-        if (deviceDetailsActivity != null){
-        }
         reactToDeviceLoad();
         reactToDeviceFetch();
-
     }
 
     private void reactToDeviceLoad(){
