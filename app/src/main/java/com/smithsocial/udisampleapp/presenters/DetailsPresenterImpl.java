@@ -16,6 +16,7 @@ import com.smithsocial.udisampleapp.views.DeviceDetailsActivity;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import udiwrapper.Device.Device;
@@ -26,6 +27,9 @@ public class DetailsPresenterImpl extends DetailsPresenter {
     private DeviceDetailsActivity deviceDetailsActivity;
     private LoadDeviceFromApi loadDeviceFromApi;
     private LocalDevices localDevices;
+    private Subscription deviceLoadSubscription;
+    private Subscription deviceFetchSubscription;
+    private Subscription deviceSaveSubscription;
 
     public DetailsPresenterImpl(DeviceDetailsActivity deviceDetailsActivity, String deviceName, String deviceId){
         this.deviceId = deviceId;
@@ -79,7 +83,7 @@ public class DetailsPresenterImpl extends DetailsPresenter {
                 deviceDetailsActivity.setDeviceIsSaved(b);
             }
         };
-        observable.subscribeOn(Schedulers.newThread())
+        deviceLoadSubscription = observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
@@ -116,7 +120,7 @@ public class DetailsPresenterImpl extends DetailsPresenter {
             }
         };
 
-        observable.subscribeOn(Schedulers.newThread())
+        deviceFetchSubscription = observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
@@ -124,6 +128,9 @@ public class DetailsPresenterImpl extends DetailsPresenter {
     @Override
     public void onDestroy() {
         deviceDetailsActivity = null;
+        if (deviceLoadSubscription != null) deviceLoadSubscription.unsubscribe();
+        if (deviceFetchSubscription != null) deviceFetchSubscription.unsubscribe();
+        if (deviceSaveSubscription != null) deviceSaveSubscription.unsubscribe();
     }
 
     @Override
@@ -160,6 +167,6 @@ public class DetailsPresenterImpl extends DetailsPresenter {
             }
         };
 
-        observable.subscribe(observer);
+        deviceSaveSubscription = observable.subscribe(observer);
     }
 }
