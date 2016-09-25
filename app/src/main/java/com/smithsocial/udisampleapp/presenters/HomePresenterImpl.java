@@ -18,12 +18,16 @@ import java.util.HashMap;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class HomePresenterImpl extends HomePresenter {
     private HomeActivity homeActivity;
     private LocalDevices localDevices;
+    private Subscription dataBaseSubscription;
+    private Subscription listSubscription;
+    private Subscription fabSubscription;
 
     public HomePresenterImpl(HomeActivity homeActivity){
         this.homeActivity = homeActivity;
@@ -83,7 +87,7 @@ public class HomePresenterImpl extends HomePresenter {
             }
         };
 
-        observable.subscribeOn(Schedulers.newThread())
+        dataBaseSubscription = observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
@@ -91,6 +95,9 @@ public class HomePresenterImpl extends HomePresenter {
     @Override
     public void onDestroy() {
         homeActivity = null;
+        if (listSubscription != null) listSubscription.unsubscribe();
+        if (fabSubscription != null) fabSubscription.unsubscribe();
+        if (dataBaseSubscription != null) dataBaseSubscription.unsubscribe();
     }
 
     @Override
@@ -126,7 +133,7 @@ public class HomePresenterImpl extends HomePresenter {
             }
         };
 
-        observable.subscribe(observer);
+        listSubscription = observable.subscribe(observer);
     }
 
     @Override
@@ -159,6 +166,6 @@ public class HomePresenterImpl extends HomePresenter {
                 homeActivity.goToSearch();
             }
         };
-        observable.subscribe(observer);
+        fabSubscription = observable.subscribe(observer);
     }
 }

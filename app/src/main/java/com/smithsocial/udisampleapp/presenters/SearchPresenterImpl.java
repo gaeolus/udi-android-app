@@ -12,6 +12,7 @@ import com.smithsocial.udisampleapp.views.SearchActivity;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import udiwrapper.Device.Device;
@@ -19,6 +20,10 @@ import udiwrapper.Device.Device;
 public class SearchPresenterImpl extends SearchPresenter {
     private SearchActivity searchActivity;
     private LoadDeviceFromApi loadDeviceFromApi;
+    private Subscription searchSubscription;
+    private Subscription existsSubscription;
+    private Subscription fetchSubscription;
+    private Subscription clickSubscription;
 
     public SearchPresenterImpl(SearchActivity searchActivity){
         this.searchActivity = searchActivity;
@@ -36,6 +41,10 @@ public class SearchPresenterImpl extends SearchPresenter {
     @Override
     public void onDestroy() {
         searchActivity = null;
+        if (searchSubscription != null) searchSubscription.unsubscribe();
+        if (existsSubscription != null) existsSubscription.unsubscribe();
+        if (fetchSubscription != null) fetchSubscription.unsubscribe();
+        if (clickSubscription != null) clickSubscription.unsubscribe();
     }
 
     @Override
@@ -79,7 +88,7 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
         };
 
-        observable.subscribeOn(Schedulers.newThread())
+        searchSubscription = observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
@@ -114,7 +123,7 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
         };
 
-        observable.subscribeOn(Schedulers.newThread())
+        existsSubscription = observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
@@ -145,7 +154,7 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
         };
 
-        observable.subscribeOn(Schedulers.newThread())
+        fetchSubscription = observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
@@ -178,6 +187,6 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
         };
 
-        observable.subscribe(observer);
+        clickSubscription = observable.subscribe(observer);
     }
 }
