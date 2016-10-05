@@ -35,7 +35,7 @@ public class DetailsPresenterImpl extends DetailsPresenter {
         this.deviceId = deviceId;
         this.deviceName = deviceName;
         this.deviceDetailsActivity = deviceDetailsActivity;
-        this.loadDeviceFromApi = new LoadDeviceFromApiImpl();
+        this.loadDeviceFromApi = new LoadDeviceFromApiImpl(deviceDetailsActivity);
         this.localDevices = new LocalDevicesImpl(deviceDetailsActivity.getApplicationContext());
     }
 
