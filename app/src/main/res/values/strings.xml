@@ -9,4 +9,5 @@
     <string name="sterilize_prior_to_use">Sterilize prior to use</string>
     <string name="has_expiration">Has expiration</string>
     <string name="description">Description</string>
+    <string name="FDA_API_KEY">YOUR_API_KEY</string>
 </resources>

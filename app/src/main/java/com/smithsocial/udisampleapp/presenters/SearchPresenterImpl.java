@@ -15,7 +15,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import udiwrapper.Device.Device;
+import udiwrapper.openFDA.Device.Device;
 
 public class SearchPresenterImpl extends SearchPresenter {
     private SearchActivity searchActivity;
@@ -27,7 +27,7 @@ public class SearchPresenterImpl extends SearchPresenter {
 
     public SearchPresenterImpl(SearchActivity searchActivity){
         this.searchActivity = searchActivity;
-        this.loadDeviceFromApi = new LoadDeviceFromApiImpl();
+        this.loadDeviceFromApi = new LoadDeviceFromApiImpl(searchActivity);
     }
 
     @Override

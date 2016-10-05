@@ -19,7 +19,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import udiwrapper.Device.Device;
+import udiwrapper.openFDA.Device.Device;
 
 public class DetailsPresenterImpl extends DetailsPresenter {
     private String deviceId;
@@ -35,7 +35,7 @@ public class DetailsPresenterImpl extends DetailsPresenter {
         this.deviceId = deviceId;
         this.deviceName = deviceName;
         this.deviceDetailsActivity = deviceDetailsActivity;
-        this.loadDeviceFromApi = new LoadDeviceFromApiImpl();
+        this.loadDeviceFromApi = new LoadDeviceFromApiImpl(deviceDetailsActivity);
         this.localDevices = new LocalDevicesImpl(deviceDetailsActivity.getApplicationContext());
     }
 
@@ -114,8 +114,8 @@ public class DetailsPresenterImpl extends DetailsPresenter {
                 deviceDetailsActivity.setDeviceName(device.getBrandName());
                 deviceDetailsActivity.setDeviceId(deviceId);
                 deviceDetailsActivity.setDeviceExpirationBool(device.hasExpirationDate());
-                deviceDetailsActivity.setSterilizePriorToUse(device.getSterilization().isSterilizePriorToUse());
-                deviceDetailsActivity.setDeviceDescription(device.getDeviceDescription());
+                deviceDetailsActivity.setSterilizePriorToUse(device.isSterilizationPriorToUse());
+                deviceDetailsActivity.setDeviceDescription(device.getDescription());
                 //set the rest of the stuff here
             }
         };
