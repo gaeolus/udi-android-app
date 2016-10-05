@@ -114,8 +114,8 @@ public class DetailsPresenterImpl extends DetailsPresenter {
                 deviceDetailsActivity.setDeviceName(device.getBrandName());
                 deviceDetailsActivity.setDeviceId(deviceId);
                 deviceDetailsActivity.setDeviceExpirationBool(device.hasExpirationDate());
-                deviceDetailsActivity.setSterilizePriorToUse(device.getSterilization().isSterilizePriorToUse());
-                deviceDetailsActivity.setDeviceDescription(device.getDeviceDescription());
+                deviceDetailsActivity.setSterilizePriorToUse(device.isSterilizationPriorToUse());
+                deviceDetailsActivity.setDeviceDescription(device.getDescription());
                 //set the rest of the stuff here
             }
         };
