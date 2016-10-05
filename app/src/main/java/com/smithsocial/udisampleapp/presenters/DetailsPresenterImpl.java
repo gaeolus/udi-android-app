@@ -19,7 +19,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import udiwrapper.Device.Device;
+import udiwrapper.openFDA.Device.Device;
 
 public class DetailsPresenterImpl extends DetailsPresenter {
     private String deviceId;

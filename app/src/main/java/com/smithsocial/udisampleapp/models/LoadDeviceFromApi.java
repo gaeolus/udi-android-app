@@ -1,6 +1,6 @@
 package com.smithsocial.udisampleapp.models;
 
-import udiwrapper.Device.Device;
+import udiwrapper.openFDA.Device.Device;
 
 public abstract class LoadDeviceFromApi {
     public abstract boolean DeviceExists(String deviceId);
