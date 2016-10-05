@@ -27,7 +27,7 @@ public class SearchPresenterImpl extends SearchPresenter {
 
     public SearchPresenterImpl(SearchActivity searchActivity){
         this.searchActivity = searchActivity;
-        this.loadDeviceFromApi = new LoadDeviceFromApiImpl();
+        this.loadDeviceFromApi = new LoadDeviceFromApiImpl(searchActivity);
     }
 
     @Override
