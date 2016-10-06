@@ -8,13 +8,17 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.smithsocial.udisampleapp.R;
 import com.smithsocial.udisampleapp.presenters.SearchPresenter;
 import com.smithsocial.udisampleapp.presenters.SearchPresenterImpl;
+
+import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.UpdateUI {
     private ProgressBar progressBar;
@@ -23,6 +27,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
     private CardView deviceCard;
     private TextView deviceNameView;
     private TextView deviceIdView;
+    private Spinner searchPropertySpinner;
     private SearchPresenter searchPresenter;
 
     @Override
@@ -39,6 +44,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
         deviceCard = (CardView) findViewById(R.id.search_device_card_view);
         deviceNameView = (TextView) findViewById(R.id.search_device_name);
         deviceIdView = (TextView) findViewById(R.id.search_device_id);
+        searchPropertySpinner = (Spinner) findViewById(R.id.search_property_spinner);
         searchPresenter = new SearchPresenterImpl(this);
 
     }
@@ -92,5 +98,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
         intent.putExtra("device_id", deviceId);
         intent.putExtra("device_name", deviceName);
         startActivity(intent);
+    }
+
+    @Override
+    public void listSearchFields(List<String> fields) {
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.single_spinner_item, fields);
+        searchPropertySpinner.setAdapter(spinnerAdapter);
     }
 }
