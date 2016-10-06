@@ -4,12 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,16 +17,16 @@ import com.smithsocial.udisampleapp.R;
 import com.smithsocial.udisampleapp.presenters.SearchPresenter;
 import com.smithsocial.udisampleapp.presenters.SearchPresenterImpl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.UpdateUI {
     private ProgressBar progressBar;
     private TextView noDeviceFound;
     private EditText editText;
-    private CardView deviceCard;
-    private TextView deviceNameView;
-    private TextView deviceIdView;
     private Spinner searchPropertySpinner;
+    private ListView listView;
     private SearchPresenter searchPresenter;
 
     @Override
@@ -41,9 +40,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
         progressBar = (ProgressBar) findViewById(R.id.search_view_progress_bar);
         noDeviceFound = (TextView) findViewById(R.id.search_no_device_text_view);
         editText = (EditText) findViewById(R.id.search_view_edit_text);
-        deviceCard = (CardView) findViewById(R.id.search_device_card_view);
-        deviceNameView = (TextView) findViewById(R.id.search_device_name);
-        deviceIdView = (TextView) findViewById(R.id.search_device_id);
+        listView = (ListView) findViewById(R.id.search_device_list_view);
         searchPropertySpinner = (Spinner) findViewById(R.id.search_property_spinner);
         searchPresenter = new SearchPresenterImpl(this);
 
@@ -54,7 +51,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
         super.onResume();
         searchPresenter.onResume();
         searchPresenter.reactToSearch(editText);
-        deviceCard.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -66,6 +63,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
     @Override
     public void showProgress() {
         noDeviceFound.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
     }
 
@@ -75,16 +73,15 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
     }
 
     @Override
-    public void setDevice(final String deviceId, final String deviceName) {
-        deviceCard.setVisibility(View.VISIBLE);
-        deviceIdView.setText(deviceId);
-        deviceNameView.setText(deviceName);
-        deviceCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchPresenter.reactToDeviceClick(new Pair<>(deviceId, deviceName));
-            }
-        });
+    public void setDevices(final Map<String, String> devices) {
+        listView.setVisibility(View.VISIBLE);
+        // placeholder listview textview layout
+        listView.setAdapter(new HashMapAdapter(this, R.layout.search_device_item, R.id.list_view_device_id, new ArrayList<>(devices.entrySet())));
+        searchPresenter.reactToList(listView);
+
+        // add an item to the end of the list?
+        // when that item becomes visible, call to the search presenter to load the next ten items
+
     }
 
     @Override
