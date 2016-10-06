@@ -3,14 +3,20 @@ package com.smithsocial.udisampleapp.presenters;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.smithsocial.udisampleapp.models.LoadDeviceFromApi;
 import com.smithsocial.udisampleapp.models.LoadDeviceFromApiImpl;
 import com.smithsocial.udisampleapp.views.SearchActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 import rx.Observer;
@@ -39,7 +45,7 @@ public class SearchPresenterImpl extends SearchPresenter {
         if (searchActivity != null){
             List<String> fields = new ArrayList<>();
             for (UDIWrapper.DeviceProperties field : UDIWrapper.DeviceProperties.values()){
-                fields.add(field.toString());
+                fields.add(field.name());
             }
             searchActivity.listSearchFields(fields);
             searchActivity.hideProgress();
@@ -58,9 +64,9 @@ public class SearchPresenterImpl extends SearchPresenter {
 
     @Override
     public void reactToSearch(final EditText editText) {
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+        Observable<Pair<UDIWrapper.DeviceProperties, String>> observable = Observable.create(new Observable.OnSubscribe<Pair<UDIWrapper.DeviceProperties, String>>() {
             @Override
-            public void call(final Subscriber<? super String> subscriber) {
+            public void call(final Subscriber<? super Pair<UDIWrapper.DeviceProperties, String>> subscriber) {
                 editText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -70,7 +76,9 @@ public class SearchPresenterImpl extends SearchPresenter {
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                         searchActivity.showProgress();
-                        subscriber.onNext( charSequence.toString() );
+                        String searchProperty = searchActivity.getSelectedSearchField();
+                        UDIWrapper.DeviceProperties deviceProperties = UDIWrapper.DeviceProperties.valueOf(searchProperty);
+                        subscriber.onNext( new Pair<>(deviceProperties, charSequence.toString()) );
                     }
 
                     @Override
@@ -80,7 +88,7 @@ public class SearchPresenterImpl extends SearchPresenter {
                 });
             }
         });
-        Observer<String> observer = new Observer<String>() {
+        Observer<Pair<UDIWrapper.DeviceProperties, String>> observer = new Observer<Pair<UDIWrapper.DeviceProperties, String>>() {
             @Override
             public void onCompleted() {
 
@@ -92,8 +100,8 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
 
             @Override
-            public void onNext(String s) {
-                reactToDeviceExists(s);
+            public void onNext(Pair<UDIWrapper.DeviceProperties, String> search) {
+                reactToDeviceExists(search.first, search.second);
             }
         };
 
@@ -102,11 +110,11 @@ public class SearchPresenterImpl extends SearchPresenter {
                 .subscribe(observer);
     }
 
-    private void reactToDeviceExists(final String deviceId){
+    private void reactToDeviceExists(final UDIWrapper.DeviceProperties deviceProperty, final String deviceValue){
         Observable<Boolean> observable = Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
-                subscriber.onNext( loadDeviceFromApi.DeviceExists(deviceId) );
+                subscriber.onNext( loadDeviceFromApi.DeviceExists(deviceProperty, deviceValue) );
             }
         });
 
@@ -124,7 +132,7 @@ public class SearchPresenterImpl extends SearchPresenter {
             @Override
             public void onNext(Boolean aBoolean) {
                 if ( aBoolean ) {
-                    reactToFetch(deviceId);
+                    reactToFetch(deviceProperty, deviceValue);
                 } else {
                     searchActivity.hideProgress();
                     searchActivity.noDevice();
@@ -137,15 +145,15 @@ public class SearchPresenterImpl extends SearchPresenter {
                 .subscribe(observer);
     }
 
-    private void reactToFetch(final String s){
+    private void reactToFetch(final UDIWrapper.DeviceProperties p, final String v){
         // once the wrapper is in place, this will be changed accordingly
-        Observable<Device> observable = Observable.create(new Observable.OnSubscribe<Device>() {
+        Observable<Map<String, Device>> observable = Observable.create(new Observable.OnSubscribe<Map<String, Device>>() {
             @Override
-            public void call(Subscriber<? super Device> subscriber) {
-                subscriber.onNext( loadDeviceFromApi.getDevice(s) );
+            public void call(Subscriber<? super Map<String, Device>> subscriber) {
+                subscriber.onNext( loadDeviceFromApi.getDevices(p, v, "0") );
             }
         });
-        Observer<Device> observer = new Observer<Device>() {
+        Observer<Map<String, Device>> observer = new Observer<Map<String, Device>>() {
             @Override
             public void onCompleted() {
 
@@ -157,9 +165,17 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
 
             @Override
-            public void onNext(Device device) {
+            public void onNext(Map<String, Device> devices) {
                 searchActivity.hideProgress();
-                searchActivity.setDevice( s, device.getBrandName() );
+
+                Iterator<String> iterator = devices.keySet().iterator();
+                Map<String, String> deviceList = new HashMap<>();
+                while (iterator.hasNext()){
+                    String key = iterator.next();
+                    deviceList.put(key, devices.get(key).getBrandName());
+                }
+
+                searchActivity.setDevices( deviceList );
             }
         };
 
@@ -169,33 +185,41 @@ public class SearchPresenterImpl extends SearchPresenter {
     }
 
     @Override
-    public void reactToDeviceClick(final Pair<String, String> stringPair) {
-        Observable<Pair<String, String>> observable = Observable.create(new Observable.OnSubscribe<Pair<String, String>>() {
+    public void reactToList(final ListView listView) {
+        Observable<HashMap.Entry> observable = Observable.create(new Observable.OnSubscribe<HashMap.Entry>() {
             @Override
-            public void call(final Subscriber<? super Pair<String, String>> subscriber) {
-
-                subscriber.onNext(stringPair);
-
+            public void call(final Subscriber<? super HashMap.Entry> subscriber) {
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        if (subscriber.isUnsubscribed()) return;
+                        HashMap.Entry mapEntry = (HashMap.Entry) listView.getAdapter().getItem(i);
+                        subscriber.onNext( mapEntry );
+                    }
+                });
             }
         });
 
-        Observer<Pair<String, String>> observer = new Observer<Pair<String, String>>() {
+        Observer<HashMap.Entry> observer = new Observer<HashMap.Entry>() {
             @Override
             public void onCompleted() {
-
+                // completed
             }
 
             @Override
             public void onError(Throwable e) {
-
+                // error
             }
 
             @Override
-            public void onNext(Pair<String, String> stringStringPair) {
-                searchActivity.goToDetails(stringStringPair.first, stringStringPair.second);
+            public void onNext(HashMap.Entry device) {
+                searchActivity.goToDetails((String) device.getKey(), (String) device.getValue());
             }
         };
 
-        clickSubscription = observable.subscribe(observer);
+        clickSubscription = observable
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
     }
 }
