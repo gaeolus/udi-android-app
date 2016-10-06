@@ -9,6 +9,9 @@ import com.smithsocial.udisampleapp.models.LoadDeviceFromApi;
 import com.smithsocial.udisampleapp.models.LoadDeviceFromApiImpl;
 import com.smithsocial.udisampleapp.views.SearchActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -16,6 +19,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import udiwrapper.openFDA.Device.Device;
+import udiwrapper.openFDA.UDIWrapper;
 
 public class SearchPresenterImpl extends SearchPresenter {
     private SearchActivity searchActivity;
@@ -33,6 +37,11 @@ public class SearchPresenterImpl extends SearchPresenter {
     @Override
     public void onResume() {
         if (searchActivity != null){
+            List<String> fields = new ArrayList<>();
+            for (UDIWrapper.DeviceProperties field : UDIWrapper.DeviceProperties.values()){
+                fields.add(field.toString());
+            }
+            searchActivity.listSearchFields(fields);
             searchActivity.hideProgress();
             searchActivity.noDevice();
         }
