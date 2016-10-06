@@ -105,4 +105,9 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.single_spinner_item, fields);
         searchPropertySpinner.setAdapter(spinnerAdapter);
     }
+
+    @Override
+    public String getSelectedSearchField(){
+        return searchPropertySpinner.getSelectedItem().toString();
+    }
 }

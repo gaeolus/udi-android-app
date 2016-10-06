@@ -10,5 +10,6 @@ class SearchView {
         void noDevice();
         void goToDetails(String deviceId, String deviceName);
         void listSearchFields(List<String> fields);
+        String getSelectedSearchField();
     }
 }
