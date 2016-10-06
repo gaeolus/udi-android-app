@@ -13,6 +13,8 @@ import com.smithsocial.udisampleapp.models.LocalDevicesImpl;
 import com.smithsocial.udisampleapp.models.provider.DeviceContract;
 import com.smithsocial.udisampleapp.views.DeviceDetailsActivity;
 
+import java.util.Map;
+
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -20,6 +22,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import udiwrapper.openFDA.Device.Device;
+import udiwrapper.openFDA.UDIWrapper;
 
 public class DetailsPresenterImpl extends DetailsPresenter {
     private String deviceId;
@@ -90,14 +93,14 @@ public class DetailsPresenterImpl extends DetailsPresenter {
 
     private void reactToDeviceFetch(){
         // once the wrapper is in place, this will be changed accordingly
-        Observable<Device> observable = Observable.create(new Observable.OnSubscribe<Device>() {
+        Observable<Map<String, Device>> observable = Observable.create(new Observable.OnSubscribe<Map<String, Device>>() {
             @Override
-            public void call(Subscriber<? super Device> subscriber) {
+            public void call(Subscriber<? super Map<String, Device>> subscriber) {
                 deviceDetailsActivity.showProgress();
-                subscriber.onNext( loadDeviceFromApi.getDevice(deviceId) ); //loadDeviceFromApi.getDevice(deviceId);
+                subscriber.onNext( loadDeviceFromApi.getDevices(UDIWrapper.DeviceProperties.IDENTIFIER, deviceId, "0") ); //loadDeviceFromApi.getDevice(deviceId);
             }
         });
-        Observer<Device> observer = new Observer<Device>() {
+        Observer<Map<String, Device>> observer = new Observer<Map<String, Device>>() {
             @Override
             public void onCompleted() {
 
@@ -109,13 +112,14 @@ public class DetailsPresenterImpl extends DetailsPresenter {
             }
 
             @Override
-            public void onNext(Device device) {
+            public void onNext(Map<String, Device> device) {
                 deviceDetailsActivity.hideProgress();
-                deviceDetailsActivity.setDeviceName(device.getBrandName());
-                deviceDetailsActivity.setDeviceId(deviceId);
-                deviceDetailsActivity.setDeviceExpirationBool(device.hasExpirationDate());
-                deviceDetailsActivity.setSterilizePriorToUse(device.isSterilizationPriorToUse());
-                deviceDetailsActivity.setDeviceDescription(device.getDescription());
+                Device thisDevice = device.get(deviceId);
+                deviceDetailsActivity.setDeviceName(thisDevice.getBrandName());
+                deviceDetailsActivity.setDeviceId(thisDevice.getDeviceIdentifier());
+                deviceDetailsActivity.setDeviceExpirationBool(thisDevice.hasExpirationDate());
+                deviceDetailsActivity.setSterilizePriorToUse(thisDevice.isSterilizationPriorToUse());
+                deviceDetailsActivity.setDeviceDescription(thisDevice.getDescription());
                 //set the rest of the stuff here
             }
         };
