@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.smithsocial.udisampleapp.R;
 
+import java.util.Map;
+
 import udiwrapper.openFDA.Device.Device;
 import udiwrapper.openFDA.UDIWrapper;
 
@@ -16,26 +18,26 @@ public class LoadDeviceFromApiImpl extends LoadDeviceFromApi {
     }
 
     @Override
-    public boolean DeviceExists(String deviceId) {
+    public boolean DeviceExists(UDIWrapper.DeviceProperties deviceProperty, String deviceValue) {
         if (udiWrapper == null){
             udiWrapper = udiWrapperBuilder
-                    .setSearch(null, deviceId)
+                    .setSearch(deviceProperty, deviceValue)
                     .build();
         } else {
-            udiWrapper.alterSearch(null, deviceId, null, null);
+            udiWrapper.alterSearch(deviceProperty, deviceValue, null, null);
         }
         return udiWrapper.getSearchExists();
     }
 
     @Override
-    public Device getDevice(String deviceId) {
+    public Map<String, Device> getDevices(UDIWrapper.DeviceProperties deviceProperty, String deviceValue, String skip) {
         if (udiWrapper == null){
             udiWrapper = udiWrapperBuilder
-                    .setSearch(null, deviceId)
+                    .setSearch(deviceProperty, deviceValue)
                     .build();
         } else {
-            udiWrapper.alterSearch(null, deviceId, null, null);
+            udiWrapper.alterSearch(deviceProperty, deviceValue, "10", skip);
         }
-        return udiWrapper.getDevice(deviceId);
+        return udiWrapper.getDevices();
     }
 }
