@@ -73,6 +73,9 @@ public class SearchPresenterImpl extends SearchPresenter {
         Observable<Pair<UDIWrapper.DeviceProperties, String>> observable = Observable.create(new Observable.OnSubscribe<Pair<UDIWrapper.DeviceProperties, String>>() {
             @Override
             public void call(final Subscriber<? super Pair<UDIWrapper.DeviceProperties, String>> subscriber) {
+                searchValue = editText.getText().toString();
+                String searchProperty = searchActivity.getSelectedSearchField();
+                final UDIWrapper.DeviceProperties deviceProperties = UDIWrapper.DeviceProperties.valueOf(searchProperty);
                 editText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -86,12 +89,10 @@ public class SearchPresenterImpl extends SearchPresenter {
                     @Override
                     public void afterTextChanged(Editable editable) {
                         searchChanged = true;
-                        String searchProperty = searchActivity.getSelectedSearchField();
-                        UDIWrapper.DeviceProperties deviceProperties = UDIWrapper.DeviceProperties.valueOf(searchProperty);
-                        String searchText = editText.getText().toString();
-                        if (!searchText.isEmpty()){
+                        searchValue = editText.getText().toString();
+                        if (!searchValue.isEmpty()){
                             searchActivity.showProgress();
-                            subscriber.onNext( new Pair<>(deviceProperties, searchText));
+                            subscriber.onNext( new Pair<>(deviceProperties, searchValue));
                         } else {
                             searchValue = "";
                             searchActivity.hideProgress();
@@ -99,6 +100,7 @@ public class SearchPresenterImpl extends SearchPresenter {
                         }
                     }
                 });
+                subscriber.onNext(new Pair<>(deviceProperties, searchValue));
             }
         });
         Observer<Pair<UDIWrapper.DeviceProperties, String>> observer = new Observer<Pair<UDIWrapper.DeviceProperties, String>>() {
