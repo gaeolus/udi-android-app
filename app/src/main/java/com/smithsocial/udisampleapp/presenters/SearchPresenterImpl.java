@@ -244,7 +244,7 @@ public class SearchPresenterImpl extends SearchPresenter {
                 String searchProperty = searchActivity.getSelectedSearchField();
                 UDIWrapper.DeviceProperties deviceProperties = UDIWrapper.DeviceProperties.valueOf(searchProperty);
                 searchChanged = false;
-                reactToDeviceExists(deviceProperties, searchValue);
+                reactToFetch(deviceProperties, searchValue);
             }
         };
 
