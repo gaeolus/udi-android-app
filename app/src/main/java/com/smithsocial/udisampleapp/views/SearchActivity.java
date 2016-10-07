@@ -90,9 +90,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
         }
         searchPresenter.reactToList(listView);
 
-        // add an item to the end of the list?
-        // when that item becomes visible, call to the search presenter to load the next ten items
+    }
 
+    @Override
+    public void loadNextResults(){
+        searchPresenter.reactToListEnd(listView);
     }
 
     @Override
