@@ -8,10 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.smithsocial.udisampleapp.R;
@@ -20,8 +18,6 @@ import com.smithsocial.udisampleapp.presenters.HomePresenterImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity implements HomeView.UpdateUI {
     private ListView listView;
