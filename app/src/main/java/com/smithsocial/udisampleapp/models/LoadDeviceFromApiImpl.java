@@ -42,7 +42,7 @@ public class LoadDeviceFromApiImpl extends LoadDeviceFromApi {
                     .setSearch(deviceProperty, deviceValue)
                     .build();
         } else {
-            if (!this.searchValue.equals(deviceValue) && this.property == deviceProperty && this.skip.equals(skip)){
+            if (!this.searchValue.equals(deviceValue) && !(this.property == deviceProperty) && !this.skip.equals(skip)){
                 udiWrapper.alterSearch(deviceProperty, deviceValue, null, skip);
             }
         }

@@ -74,6 +74,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
 
     @Override
     public void setDevices(final Map<String, String> devices, boolean searchChangedFlag) {
+        noDeviceFound.setVisibility(View.INVISIBLE);
         if (searchChangedFlag && listView.getAdapter() != null){
             HashMapAdapter adapter = (HashMapAdapter) listView.getAdapter();
             adapter.clear();
