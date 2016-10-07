@@ -9,5 +9,6 @@ public abstract class SearchPresenter {
     public abstract void onDestroy();
     public abstract void reactToSearch(EditText editText);
     public abstract void reactToList(ListView listView);
+    public abstract void reactToListEnd(ListView listView);
 
 }
