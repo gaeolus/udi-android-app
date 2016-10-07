@@ -218,7 +218,7 @@ public class SearchPresenterImpl extends SearchPresenter {
 
                     @Override
                     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                        if (firstVisibleItem + visibleItemCount == totalItemCount){
+                        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount >= 10){
                             subscriber.onNext(totalItemCount);
                             subscriber.onCompleted();
                         }
