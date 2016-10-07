@@ -54,7 +54,6 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
             searchActivity.listSearchFields(fields);
             searchActivity.hideProgress();
-            searchActivity.noDevice();
         }
     }
 
