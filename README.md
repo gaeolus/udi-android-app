@@ -5,8 +5,8 @@ This is a simple sample android application to show how to use the [udiwrapper](
 - Clone this repo:
 - Open the project in Android Studio
 - Add your API Key to /app/src/main/res/values/strings.xml
-    - Go to [The FDA's openFDA API Website]()
-    - Find the section titled "Request an API Key" and request your API Key
+    - Go to [The FDA's openFDA API Website](https://open.fda.gov/device/udi/)
+    - Find the section titled "Get your API key" and request your API Key
     - Enter the API Key that's sent to your email into /app/src/main/res/values/strings.xml
 - Run the app
 
