@@ -65,6 +65,7 @@ public class SearchPresenterImpl extends SearchPresenter {
         if (existsSubscription != null) existsSubscription.unsubscribe();
         if (fetchSubscription != null) fetchSubscription.unsubscribe();
         if (clickSubscription != null) clickSubscription.unsubscribe();
+        if (listEndSubscription != null) listEndSubscription.unsubscribe();
     }
 
     @Override
