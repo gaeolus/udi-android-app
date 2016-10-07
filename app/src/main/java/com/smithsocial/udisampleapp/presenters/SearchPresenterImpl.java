@@ -4,6 +4,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -28,12 +29,16 @@ import udiwrapper.openFDA.Device.Device;
 import udiwrapper.openFDA.UDIWrapper;
 
 public class SearchPresenterImpl extends SearchPresenter {
+    private String searchValue;
+    private String skip;
+    private boolean searchChanged;
     private SearchActivity searchActivity;
     private LoadDeviceFromApi loadDeviceFromApi;
     private Subscription searchSubscription;
     private Subscription existsSubscription;
     private Subscription fetchSubscription;
     private Subscription clickSubscription;
+    private Subscription listEndSubscription;
 
     public SearchPresenterImpl(SearchActivity searchActivity){
         this.searchActivity = searchActivity;
@@ -75,15 +80,22 @@ public class SearchPresenterImpl extends SearchPresenter {
 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        searchActivity.showProgress();
-                        String searchProperty = searchActivity.getSelectedSearchField();
-                        UDIWrapper.DeviceProperties deviceProperties = UDIWrapper.DeviceProperties.valueOf(searchProperty);
-                        subscriber.onNext( new Pair<>(deviceProperties, charSequence.toString()) );
                     }
 
                     @Override
                     public void afterTextChanged(Editable editable) {
-
+                        searchChanged = true;
+                        String searchProperty = searchActivity.getSelectedSearchField();
+                        UDIWrapper.DeviceProperties deviceProperties = UDIWrapper.DeviceProperties.valueOf(searchProperty);
+                        String searchText = editText.getText().toString();
+                        if (!searchText.isEmpty()){
+                            searchActivity.showProgress();
+                            subscriber.onNext( new Pair<>(deviceProperties, searchText));
+                        } else {
+                            searchValue = "";
+                            searchActivity.hideProgress();
+                            searchActivity.noDevice();
+                        }
                     }
                 });
             }
@@ -105,15 +117,14 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
         };
 
-        searchSubscription = observable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
+        searchSubscription = observable.subscribe(observer);
     }
 
     private void reactToDeviceExists(final UDIWrapper.DeviceProperties deviceProperty, final String deviceValue){
         Observable<Boolean> observable = Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
+                searchValue = deviceValue;
                 subscriber.onNext( loadDeviceFromApi.DeviceExists(deviceProperty, deviceValue) );
             }
         });
@@ -150,7 +161,9 @@ public class SearchPresenterImpl extends SearchPresenter {
         Observable<Map<String, Device>> observable = Observable.create(new Observable.OnSubscribe<Map<String, Device>>() {
             @Override
             public void call(Subscriber<? super Map<String, Device>> subscriber) {
-                subscriber.onNext( loadDeviceFromApi.getDevices(p, v, "0") );
+                if (!searchValue.isEmpty()){
+                    subscriber.onNext( loadDeviceFromApi.getDevices(p, v, skip) );
+                }
             }
         });
         Observer<Map<String, Device>> observer = new Observer<Map<String, Device>>() {
@@ -166,6 +179,7 @@ public class SearchPresenterImpl extends SearchPresenter {
 
             @Override
             public void onNext(Map<String, Device> devices) {
+
                 searchActivity.hideProgress();
 
                 Iterator<String> iterator = devices.keySet().iterator();
@@ -175,13 +189,65 @@ public class SearchPresenterImpl extends SearchPresenter {
                     deviceList.put(key, devices.get(key).getBrandName());
                 }
 
-                searchActivity.setDevices( deviceList );
+                searchActivity.setDevices( deviceList, searchChanged);
+
+                if (deviceList.size() == 10){
+                    searchActivity.loadNextResults();
+                }
             }
         };
 
         fetchSubscription = observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+    }
+
+    @Override
+    public void reactToListEnd(final ListView listView){
+        Observable<Integer> observable = Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(final Subscriber<? super Integer> subscriber) {
+                if (subscriber.isUnsubscribed()) return;
+
+                listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        if (firstVisibleItem + visibleItemCount == totalItemCount){
+                            subscriber.onNext(totalItemCount);
+                            subscriber.onCompleted();
+                        }
+                    }
+                });
+            }
+        });
+
+        Observer<Integer> observer = new Observer<Integer>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Integer i) {
+                skip = Integer.toString(i);
+                String searchProperty = searchActivity.getSelectedSearchField();
+                UDIWrapper.DeviceProperties deviceProperties = UDIWrapper.DeviceProperties.valueOf(searchProperty);
+                searchChanged = false;
+                reactToDeviceExists(deviceProperties, searchValue);
+            }
+        };
+
+        listEndSubscription = observable.subscribe(observer);
     }
 
     @Override
@@ -217,9 +283,6 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
         };
 
-        clickSubscription = observable
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
+        clickSubscription = observable.subscribe(observer);
     }
 }

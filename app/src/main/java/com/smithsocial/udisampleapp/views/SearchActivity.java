@@ -73,10 +73,21 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
     }
 
     @Override
-    public void setDevices(final Map<String, String> devices) {
+    public void setDevices(final Map<String, String> devices, boolean searchChangedFlag) {
+        if (searchChangedFlag && listView.getAdapter() != null){
+            HashMapAdapter adapter = (HashMapAdapter) listView.getAdapter();
+            adapter.clear();
+        }
+        List<Map.Entry<String, String >> deviceList = new ArrayList<>(devices.entrySet());
         listView.setVisibility(View.VISIBLE);
-        // placeholder listview textview layout
-        listView.setAdapter(new HashMapAdapter(this, R.layout.search_device_item, R.id.list_view_device_id, new ArrayList<>(devices.entrySet())));
+        if (listView.getAdapter() == null){
+            // placeholder listview textview layout
+            listView.setAdapter(new HashMapAdapter(this, R.layout.search_device_item, R.id.list_view_device_id, deviceList));
+        } else {
+            HashMapAdapter adapter = (HashMapAdapter) listView.getAdapter();
+            adapter.addAll(deviceList);
+            adapter.notifyDataSetChanged();
+        }
         searchPresenter.reactToList(listView);
 
         // add an item to the end of the list?
@@ -87,6 +98,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
     @Override
     public void noDevice() {
         noDeviceFound.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.INVISIBLE);
+        if (listView.getAdapter() != null){
+            HashMapAdapter adapter = (HashMapAdapter) listView.getAdapter();
+            adapter.clear();
+        }
     }
 
     @Override
