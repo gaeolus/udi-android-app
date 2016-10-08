@@ -7,5 +7,6 @@ import udiwrapper.openFDA.UDIWrapper;
 
 public abstract class LoadDeviceFromApi {
     public abstract boolean DeviceExists(UDIWrapper.DeviceProperties deviceProperty, String deviceValue);
-    public abstract Map<String, Device> getDevices(UDIWrapper.DeviceProperties deviceProperty, String deviceValue, String skip);
+    public abstract Map<String, Device> getDevices(UDIWrapper.DeviceProperties deviceProperty, String deviceValue);
+    public abstract Map<String, Device> nextTen();
 }

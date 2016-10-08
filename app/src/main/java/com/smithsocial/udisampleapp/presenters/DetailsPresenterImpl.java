@@ -97,7 +97,7 @@ public class DetailsPresenterImpl extends DetailsPresenter {
             @Override
             public void call(Subscriber<? super Map<String, Device>> subscriber) {
                 deviceDetailsActivity.showProgress();
-                subscriber.onNext( loadDeviceFromApi.getDevices(UDIWrapper.DeviceProperties.IDENTIFIER, deviceId, "0") ); //loadDeviceFromApi.getDevice(deviceId);
+                subscriber.onNext( loadDeviceFromApi.getDevices(UDIWrapper.DeviceProperties.IDENTIFIER, deviceId) ); //loadDeviceFromApi.getDevice(deviceId);
             }
         });
         Observer<Map<String, Device>> observer = new Observer<Map<String, Device>>() {
