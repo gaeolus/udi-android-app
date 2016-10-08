@@ -12,9 +12,9 @@ import udiwrapper.openFDA.UDIWrapper;
 public class LoadDeviceFromApiImpl extends LoadDeviceFromApi {
     private UDIWrapper udiWrapper;
     private UDIWrapper.Builder udiWrapperBuilder;
-    private UDIWrapper.DeviceProperties property;
-    private String searchValue;
-    private String skip;
+    private UDIWrapper.DeviceProperties property = UDIWrapper.DeviceProperties.IDENTIFIER;
+    private String searchValue = " ";
+    private int skip = 0;
 
     public LoadDeviceFromApiImpl(Context context){
         udiWrapperBuilder = new UDIWrapper.Builder(context.getString(R.string.FDA_API_KEY)).setLimit(10);
@@ -22,12 +22,15 @@ public class LoadDeviceFromApiImpl extends LoadDeviceFromApi {
 
     @Override
     public boolean DeviceExists(UDIWrapper.DeviceProperties deviceProperty, String deviceValue) {
+        skip = 0;
         if (udiWrapper == null){
             udiWrapper = udiWrapperBuilder
                     .setSearch(deviceProperty, deviceValue)
                     .build();
         } else {
-            udiWrapper.alterSearch(deviceProperty, deviceValue, "10", null);
+            if (!this.searchValue.equals(deviceValue) || !(this.property == deviceProperty)){
+                udiWrapper.alterSearch(deviceProperty, deviceValue, null, Integer.toString(skip));
+            }
         }
         this.searchValue = deviceValue;
         this.property = deviceProperty;
@@ -35,20 +38,26 @@ public class LoadDeviceFromApiImpl extends LoadDeviceFromApi {
     }
 
     @Override
-    public Map<String, Device> getDevices(UDIWrapper.DeviceProperties deviceProperty, String deviceValue, String skip) {
-
+    public Map<String, Device> getDevices(UDIWrapper.DeviceProperties deviceProperty, String deviceValue) {
+        skip = 0;
         if (udiWrapper == null){
             udiWrapper = udiWrapperBuilder
                     .setSearch(deviceProperty, deviceValue)
                     .build();
         } else {
-            if (!this.searchValue.equals(deviceValue) && !(this.property == deviceProperty) && !this.skip.equals(skip)){
-                udiWrapper.alterSearch(deviceProperty, deviceValue, null, skip);
+            if (!(this.searchValue.equals(deviceValue)) || !(this.property == deviceProperty)){
+                udiWrapper.alterSearch(deviceProperty, deviceValue, null, Integer.toString(skip));
             }
         }
         this.searchValue = deviceValue;
         this.property = deviceProperty;
-        this.skip = skip;
+        return udiWrapper.getDevices();
+    }
+
+    @Override
+    public Map<String, Device> nextTen(){
+        int currentSkip = skip + 10;
+        udiWrapper.alterSearch(null, null, null, Integer.toString(currentSkip));
         return udiWrapper.getDevices();
     }
 }
