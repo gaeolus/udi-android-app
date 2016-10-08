@@ -30,8 +30,8 @@ import udiwrapper.openFDA.UDIWrapper;
 
 public class SearchPresenterImpl extends SearchPresenter {
     private String searchValue;
-    private String skip;
-    private boolean searchChanged;
+    private UDIWrapper.DeviceProperties property;
+    private boolean refreshSearch;
     private SearchActivity searchActivity;
     private LoadDeviceFromApi loadDeviceFromApi;
     private Subscription searchSubscription;
@@ -54,6 +54,7 @@ public class SearchPresenterImpl extends SearchPresenter {
             }
             searchActivity.listSearchFields(fields);
             searchActivity.hideProgress();
+            refreshSearch = true;
         }
     }
 
@@ -74,7 +75,7 @@ public class SearchPresenterImpl extends SearchPresenter {
             public void call(final Subscriber<? super Pair<UDIWrapper.DeviceProperties, String>> subscriber) {
                 searchValue = editText.getText().toString();
                 String searchProperty = searchActivity.getSelectedSearchField();
-                final UDIWrapper.DeviceProperties deviceProperties = UDIWrapper.DeviceProperties.valueOf(searchProperty);
+                property = UDIWrapper.DeviceProperties.valueOf(searchProperty);
                 editText.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -87,11 +88,13 @@ public class SearchPresenterImpl extends SearchPresenter {
 
                     @Override
                     public void afterTextChanged(Editable editable) {
-                        searchChanged = true;
+                        refreshSearch = true;
                         searchValue = editText.getText().toString();
                         if (!searchValue.isEmpty()){
                             searchActivity.showProgress();
-                            subscriber.onNext( new Pair<>(deviceProperties, searchValue));
+                            String searchProperty = searchActivity.getSelectedSearchField();
+                            property = UDIWrapper.DeviceProperties.valueOf(searchProperty);
+                            subscriber.onNext( new Pair<>(property, searchValue));
                         } else {
                             searchValue = "";
                             searchActivity.hideProgress();
@@ -99,7 +102,7 @@ public class SearchPresenterImpl extends SearchPresenter {
                         }
                     }
                 });
-                subscriber.onNext(new Pair<>(deviceProperties, searchValue));
+                subscriber.onNext(new Pair<>(property, searchValue));
             }
         });
         Observer<Pair<UDIWrapper.DeviceProperties, String>> observer = new Observer<Pair<UDIWrapper.DeviceProperties, String>>() {
@@ -164,7 +167,11 @@ public class SearchPresenterImpl extends SearchPresenter {
             @Override
             public void call(Subscriber<? super Map<String, Device>> subscriber) {
                 if (!searchValue.isEmpty()){
-                    subscriber.onNext( loadDeviceFromApi.getDevices(p, v, skip) );
+                    if (!refreshSearch){
+                        subscriber.onNext( loadDeviceFromApi.nextTen());
+                    } else {
+                        subscriber.onNext( loadDeviceFromApi.getDevices(p, v) );
+                    }
                 }
             }
         });
@@ -191,7 +198,7 @@ public class SearchPresenterImpl extends SearchPresenter {
                     deviceList.put(key, devices.get(key).getBrandName());
                 }
 
-                searchActivity.setDevices( deviceList, searchChanged);
+                searchActivity.setDevices( deviceList, refreshSearch);
 
                 if (deviceList.size() == 10){
                     searchActivity.loadNextResults();
@@ -241,11 +248,10 @@ public class SearchPresenterImpl extends SearchPresenter {
 
             @Override
             public void onNext(Integer i) {
-                skip = Integer.toString(i);
+                refreshSearch = false;
                 String searchProperty = searchActivity.getSelectedSearchField();
                 UDIWrapper.DeviceProperties deviceProperties = UDIWrapper.DeviceProperties.valueOf(searchProperty);
-                searchChanged = false;
-                reactToFetch(deviceProperties, searchValue);
+                reactToDeviceExists(deviceProperties, searchValue);
             }
         };
 
