@@ -82,7 +82,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.Upda
         List<Map.Entry<String, String >> deviceList = new ArrayList<>(devices.entrySet());
         listView.setVisibility(View.VISIBLE);
         if (listView.getAdapter() == null){
-            // placeholder listview textview layout
             listView.setAdapter(new HashMapAdapter(this, R.layout.search_device_item, R.id.list_view_device_id, deviceList));
         } else {
             HashMapAdapter adapter = (HashMapAdapter) listView.getAdapter();
